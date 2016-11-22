@@ -8,5 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Monolit ApS",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jslint": "^0.10.3",
+    "promise": "^7.1.1"
+  }
 }

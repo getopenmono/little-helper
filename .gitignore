@@ -38,3 +38,6 @@ bower_components
 .node_repl_history
 .atom-build.yml
 assets
+.vscode
+jsconfig.json
+jslint.conf

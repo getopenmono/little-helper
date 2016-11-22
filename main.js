@@ -1,10 +1,17 @@
-const {app, BrowserWindow} = require('electron')
+
+const {app, BrowserWindow, ipcRenderer} = require('electron')
 const path = require('path')
 const url = require('url')
+
+const upload = require("./upload_app")
+const project = require("./projects")
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+upload.attachHandlers();
+project.attachCommands();
 
 function createWindow () {
     // Create the browser window.

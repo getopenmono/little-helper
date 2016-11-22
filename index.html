@@ -1,14 +1,125 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mono's Little Helper</title>
-    <link href="bower_components/bootstrap/dist/css/bootstrap.css"></link>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean1.css">
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-default navigation-clean">
+            <div class="container">
+                <div class="navbar-header"><a class="navbar-brand navbar-link" href="#">Mono's Little Helper</a>
+                    <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                </div>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li role="presentation"><a href="#" id="docsLink">Developer Docs</a></li>
+                        <li role="presentation"><a href="#" id="communityLink">Community </a></li>
+                        <li role="presentation"><a href="#" id="kioskLink">monokiosk </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h4> <i class="fa fa-cogs"></i> Actions </h4>
+                    <p class="hide">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu velit magna. Vivamus pharetra ullamcorper neque, non convallis dui ultricies non. In rutrum augue ut enim ornare, vitae tempor mi condimentum.</p>
+                    <div class="list-group">
+                        <a class="list-group-item" href="#" id="uploadCommand">
+                            <p><i class="glyphicon glyphicon-download-alt"></i><span> Install an application</span></p><small class="text-muted">Choose an existing Mono application file (ELF) and install it on your device</small></a>
+                        <a class="list-group-item"
+                        href="#" id="createCommand">
+                            <p class="list-group-item-text"><i class="glyphicon glyphicon-plus"></i><span> Create a new project</span></p><small class="text-muted">Create a new Mono Application project,and start coding!</small></a>
+                        <a class="list-group-item" href="#" id="openCommand">
+                            <p class="list-group-item-text"><i class="glyphicon glyphicon-folder-open"></i><span> Open a project</span></p><small class="text-muted">Browse to an existing project directory, and open it in the Atom editor</small></a>
+                    </div>
+                </div>
+                <div class="col-md-5 col-md-offset-1 col-sm-6">
+                    <h4><i class="glyphicon glyphicon-duplicate"></i> Recents </h4>
+                    <div class="list-group"><a class="list-group-item"><h5>name </h5><p><small>path </small></p></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <p class="text-right" id="mono-state-par" style="margin-top:1em;"> <span id="mono-state-text">Mono not connected </span><i class="glyphicon glyphicon-remove" id="mono-state-icon"></i></p>
+        </div>
+    </footer>
+    <div class="modal fade" role="dialog" tabindex="-1" id="uploadModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 class="modal-title">Installing application...</h4><small> </small>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped active" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><span class="sr-only">100%</span></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p>Installing the application on Mono...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="errorModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="text-danger modal-title" id="errorModalHeading">Modal Title</h4></div>
+                <div class="modal-body">
+                    <p class="text-danger" id="errroModalBody">The content of your modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="createModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Create New Project</h4></div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="form-group">
+                            <label class="control-label" for="projectName">Project Name</label>
+                            <input class="form-control" type="text" name="projectName" required="" placeholder="new_mono_project" minlength="1" autofocus="" id="createProjectName">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label class="control-label">
+                                    <input type="checkbox" checked="" id="createNotBare">Include <em>Hello World</em> template code</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label class="control-label">
+                                    <input type="checkbox" checked="" id="createOpenAtom">Open the new project in Atom editor</label>
+                            </div>
+                        </div>
+                        <p class="text-right">
+                            <button class="btn btn-default" type="button" data-dismiss="modal">Cancel </button>
+                            <button class="btn btn-success" type="submit">Choose location</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="client.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+
 </html>
