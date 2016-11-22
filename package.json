@@ -1,0 +1,12 @@
+{
+  "name": "little-helper",
+  "version": "1.0.0",
+  "description": "Helper GUI for OpenMono command line tools, like monomake and monoprog",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Monolit ApS",
+  "license": "MIT"
+}

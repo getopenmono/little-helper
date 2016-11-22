@@ -1,0 +1,21 @@
+{
+  "name": "little-helper",
+  "description": "Helper GUI for OpenMono command line tools, like monomake and monoprog",
+  "main": "main.js",
+  "authors": [
+    "Monolit ApS"
+  ],
+  "license": "MIT",
+  "homepage": "www.openmono.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
