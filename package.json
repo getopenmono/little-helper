@@ -1,16 +1,33 @@
 {
-  "name": "little-helper",
+  "name": "mono-make",
+  "productName": "Monomake",
   "version": "1.0.0",
-  "description": "Helper GUI for OpenMono command line tools, like monomake and monoprog",
+  "description": "Mono utility for OpenMono command line tools, like monomake and monoprog",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "build --dir",
+    "dist": "build"
   },
   "author": "Monolit ApS",
   "license": "MIT",
   "dependencies": {
-    "jslint": "^0.10.3",
     "promise": "^7.1.1"
+  },
+  "devDependencies": {
+    "bower": "^1.8.0",
+    "jslint": "^0.10.3"
+  },
+  "build": {
+    "asar": false,
+    "appId": "dk.monolit.openmono.monohelper",
+    "mac": {
+      "icon": "build/RectLogoBlack.icns",
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "iconUrl": "build/RectLogoBlack.ico"
+    }
   }
 }
