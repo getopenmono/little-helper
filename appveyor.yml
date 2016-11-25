@@ -12,6 +12,8 @@ build_script:
     npm install
 
     npm run dist
+
+    dir
 artifacts:
-- path: dist/Monomake-*-win.exe
+- path: dist/Monomake-**-win.exe
   name: MonoMake
