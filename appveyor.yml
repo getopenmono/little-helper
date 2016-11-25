@@ -1,0 +1,17 @@
+version: 1.4.{build}
+branches:
+  only:
+  - master
+image: Visual Studio 2013
+platform: x86
+cache:
+- node_modules
+- bower_components
+build_script:
+- cmd: >-
+    npm install
+
+    npm run dist
+artifacts:
+- path: dist/win/MonoMake*.exe
+  name: MonoMake

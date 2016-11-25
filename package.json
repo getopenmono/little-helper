@@ -30,7 +30,7 @@
       "category": "public.app-category.utilities"
     },
     "win": {
-      "iconUrl": "build/RectLogoBlack.ico"
+      "icon": "build/RectLogoBlack.ico"
     }
   }
 }
