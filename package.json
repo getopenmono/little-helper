@@ -8,7 +8,8 @@
     "start": "electron main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "postinstall": "bower install"
   },
   "author": "Monolit ApS",
   "license": "MIT",
@@ -17,7 +18,9 @@
   },
   "devDependencies": {
     "bower": "^1.8.0",
-    "jslint": "^0.10.3"
+    "jslint": "^0.10.3",
+    "electron-builder": "^8.6.0",
+    "electron": "^1.4.8"
   },
   "build": {
     "asar": false,
