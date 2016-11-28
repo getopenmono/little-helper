@@ -21,6 +21,6 @@ deploy:
   provider: releases
   api_key:
     secure: tATZV7qTD3eyAUqA1xrY/wV2le8q+W0++15zmzWW07/bA3Wmw2gIaXODATK3H3BsHy7mi+Cr5q0/dP0qw1S+Q19DFAANuvM7PfiMmFNSlFB2SGQSZAsjHcGB/ZpUudUlT7Jw6qBl33i+efsafMo97Gb/NeCF8gFN+F5M0Xt7ooLjGnOBKdulbawf8DNE/B/kgh+Y2ZjzB47PxEdo/cXd/B9aKrIzA7bC2OCxcg5QmbBvksACdlQTtHmXfUIieE1j/JaTuy8qF7gNid1YR0k1haD1R4lquA/E/aiS+X6VyUsNa92oqLSmYdaMpjVnSg5SuSOmmnJi+2pnojn6Ii5SHWL5Ys1oPXga8JHQ4bkFtjkSDZkZdl6E8QMD6hyh1eDv26x6rZryXcST8eg7ofnoJ57L67Ab2Rb+ouy0/QDB/vYHZCRkYKznToZTiy77tJngXrzn7DpyyGbTOLdCveEql9hSYM77DJ+RAP/ViYTLzrR4vwKEX4heHq4xS9gXewYX0ti/CIrd/13+EU81I7s9c+Y9a7ySAAkKCyElKnjUb7DVqyf0EjCFtBDG1bpckW+tZvUntW8JHcsqJIXZ9PhDDdRvOOYn/d91ps0m1MJjt0mpXB9HTNLtaWx6Z6IXAk8l48KnUaZvdmVod55vWltuCpVXA8WVbSTEVWsWI8CSKFY=
-  file: dist/mono-make-1.0.0.deb
+  file: dist/mono-make_1.0.0_amd64.deb
   on:
     repo: getopenmono/little-helper
