@@ -32,11 +32,11 @@
     },
     "win": {
       "icon": "build/RectLogoBlack.ico",
-      "target": "deb"
+      "target": "zip"
     },
     "linux": {
         "category": "Development",
-        "target": "zip"
+        "target": "deb"
     }
   }
 }
