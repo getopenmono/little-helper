@@ -15,5 +15,5 @@ build_script:
 
     dir dist
 artifacts:
-- path: dist/Monomake UI-**-**-win.zip
+- path: "dist/Monomake UI-**-**-win.zip"
   name: MonoMake
