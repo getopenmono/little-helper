@@ -11,7 +11,12 @@
     "dist": "build",
     "postinstall": "bower install"
   },
-  "author": "Monolit ApS",
+  "author":
+    {
+        "name" : "Monolit ApS",
+        "email" : "contact@openmono.com",
+        "url" : "http://developer.openmono.com/"
+    },
   "license": "MIT",
   "dependencies": {
     "promise": "^7.1.1"
