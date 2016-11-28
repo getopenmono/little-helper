@@ -32,7 +32,7 @@
     "appId": "dk.monolit.openmono.monomake-ui",
     "mac": {
       "category": "public.app-category.utilities",
-      "target": "dir"
+      "target": "zip"
     },
     "win": {
       "target": "zip"
