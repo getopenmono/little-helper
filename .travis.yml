@@ -11,12 +11,12 @@ cache:
   directories:
   - node_modules
   - bower_components
+env:
+  - DEPLOY_FILE=dist/mono-make_1.0.0_amd64.deb
 matrix:
-    include:
-        - os: linux
-          env: DEPLOY_FILE=dist/mono-make_1.0.0_amd64.deb
-        - os: osx
-          env: DEPLOY_FILE=dist/mac/Monomake-UI-1.0.0-mac.zip
+  include:
+    - os: osx
+     env: DEPLOY_FILE=dist/mac/Monomake-UI-1.0.0-mac.zip
 branches:
   only:
   - master
