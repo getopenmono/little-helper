@@ -53,7 +53,7 @@ exports.detectMono = function() {
             returnCode = code;
         })
 
-        //mp.stdout.pipe(process.stdout)
+        mp.stdout.pipe(process.stdout)
     });
 }
 
