@@ -1,11 +1,16 @@
 language: node_js
 node_js: node
+services:
+- docker
+addons:
+  apt:
+    packages:
+    - icnsutils
+    - graphicsmagick
 cache:
   directories:
   - node_modules
   - bower_components
-services:
-- docker
 branches:
   only:
   - master

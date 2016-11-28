@@ -31,12 +31,10 @@
     "asar": true,
     "appId": "dk.monolit.openmono.monomake-ui",
     "mac": {
-      "icon": "build/RectLogoBlack.icns",
       "category": "public.app-category.utilities",
       "target": "dir"
     },
     "win": {
-      "icon": "build/RectLogoBlack.ico",
       "target": "zip"
     },
     "linux": {
