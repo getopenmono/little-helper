@@ -10,5 +10,5 @@ branches:
   only:
   - master
 script:
-    - npm run pack
-    - ls -l && ls -l dist
+    - npm run dist
+    - ls -l dist
