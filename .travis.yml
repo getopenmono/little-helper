@@ -1,9 +1,14 @@
 language: node_js
 node_js: node
 cache:
-    - node_modules
-    - bower_components
+    directories:
+        - node_modules
+        - bower_components
 services:
     - docker
+branches:
+  only:
+  - master
 script:
     - npm run pack
+    - ls -l && ls -l dist
