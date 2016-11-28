@@ -1,6 +1,6 @@
 {
   "name": "mono-make",
-  "productName": "Monomake",
+  "productName": "Monomake UI",
   "version": "1.0.0",
   "description": "Mono utility for OpenMono command line tools, like monomake and monoprog",
   "main": "main.js",
@@ -27,7 +27,8 @@
     "appId": "dk.monolit.openmono.monohelper",
     "mac": {
       "icon": "build/RectLogoBlack.icns",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "target": "dir"
     },
     "win": {
       "icon": "build/RectLogoBlack.ico",
