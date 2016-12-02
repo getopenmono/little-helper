@@ -5,22 +5,17 @@ const Path = require("path")
 const Promise = require("promise")
 const Settings = require("./settings")
 
-exports.insertRecent = function(title, path) {
+exports.insertRecent = function(title, path, webSender) {
     var recent = {title: title, path: path};
     console.log("creating recent: ",recent);
     return Settings.get("recents").then((recents) => {
         console.log("Got recnts: ",recents);
-
-        if (!recents["isArray"] || !recents.isArray())
-        {
-            console.log("recents not an array");
-            recents = [];
-        }
+        recents = [].concat(recents);
 
         if (recents.length > 0) {
             recents = recents.filter((r) => { return r["title"] != title || r["path"] != path; });
             console.log("No existing recnts: ",recents);
-            while (recents.length >= 10)
+            while (recents.length >= 4)
             {
                 recents.pop()
             }
@@ -30,7 +25,7 @@ exports.insertRecent = function(title, path) {
         recents.unshift(recent);
 
         console.log("Save new recent array: ", recents);
-        ipcMain.send("recentsChanged", recents);
+        webSender.send("recentsChanged", recents);
         return Settings.set("recents", recents);
     });
 }
@@ -148,11 +143,26 @@ exports.openCommand = function(evnt, args) {
     exports.createDialog("Open project directory", "Open").then((path) => {
         exports.openProject(path);
         console.log("calling recent routine");
-        exports.insertRecent(Path.basename(path), path);
+        exports.insertRecent(Path.basename(path), path, evnt.sender);
     })
+}
+
+exports.getRecents = function(evnt)
+{
+    console.log("checking settings...", app.getPath("userData"));
+    
+    Settings.get("recents").then((recents) => {
+        console.log("sending recents: ", recents);
+        evnt.sender.send("recentsChanged", recents);
+    }, (err) => {
+        console.log(err);
+        Settings.set("recents", []);
+        evnt.sender.send("recentsChanged", []);
+    });
 }
 
 exports.attachCommands = function() {
     ipcMain.on("createCommand", exports.createProjectCommand)
     ipcMain.on("openCommand", exports.openCommand)
+    ipcMain.on("getRecents", exports.getRecents)
 }

@@ -1,5 +1,6 @@
 
 window.$ = window.jQuery = require("./bower_components/jquery/dist/jquery.js");
+const recents = require("./recents");
 const {shell} = require("electron");
 
 const ipcRenderer = require("electron").ipcRenderer;
@@ -107,6 +108,9 @@ $(window).ready(() => {
 
         ipcRenderer.send("createCommand", [$("#createProjectName").val(), $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
     })
+
+    ipcRenderer.on("recentsChanged", recents.recentsChangedHandler);
+    ipcRenderer.send("getRecents");
 
     $("#docsLink").click(() => {shell.openExternal("http://developer.openmono.com") })
     $("#communityLink").click(() => {shell.openExternal("https://community.openmono.com") })

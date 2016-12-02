@@ -42,17 +42,8 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
 
-console.log("checking settings...");
-    
-    Settings.get("recents").then((recents) => {
-        console.log("sedning recents: ", recents);
-        ipcMain.send("recentsChanged", recents);
-    }, (err) => {
-        console.log(err);
-        Settings.set("recents", []);
-    });
-
     createWindow();
+
 })
 
 // Quit when all windows are closed.
