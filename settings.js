@@ -36,8 +36,10 @@ exports.set = function(key, value)
 {
     return new Promise((resolve, error) => {
         jsonStorage.set(key, value, (err) => {
-            if (err)
+            if (err) {
+                console.log("Save err: ",err);
                 error(err);
+            }
             else
                 resolve();
         });
