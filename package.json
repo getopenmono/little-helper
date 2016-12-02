@@ -5,20 +5,24 @@
   "description": "Mono utility for OpenMono command line tools, like monomake and monoprog",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js",
+    "start": "electron main.js --debug=5858",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "build --dir",
     "dist": "build",
     "postinstall": "bower install"
   },
-  "author":
-    {
-        "name" : "Monolit ApS",
-        "email" : "contact@openmono.com",
-        "url" : "http://developer.openmono.com/"
-    },
+  "node-debugger": {
+      "nodePath": "electron",
+      "nodeArgs": "main.js"
+  },
+  "author": {
+    "name": "Monolit ApS",
+    "email": "contact@openmono.com",
+    "url": "http://developer.openmono.com/"
+  },
   "license": "MIT",
   "dependencies": {
+    "electron-json-storage": "^2.1.0",
     "promise": "^7.1.1"
   },
   "devDependencies": {
@@ -38,8 +42,8 @@
       "target": "zip"
     },
     "linux": {
-        "category": "Development",
-        "target": "deb"
+      "category": "Development",
+      "target": "deb"
     }
   }
 }

@@ -3,6 +3,37 @@ const {app, BrowserWindow, dialog, ipcMain, ipcRenderer, shell} = require('elect
 const child = require("child_process")
 const Path = require("path")
 const Promise = require("promise")
+const Settings = require("./settings")
+
+exports.insertRecent = function(title, path) {
+    var recent = {title: title, path: path};
+    console.log("creating recent: ",recent);
+    return Settings.get("recents").then((recents) => {
+        console.log("Got recnts: ",recents);
+
+        if (!recents["isArray"] || !recents.isArray())
+        {
+            console.log("recents not an array");
+            recents = [];
+        }
+
+        if (recents.length > 0) {
+            recents = recents.filter((r) => { return r["title"] != title || r["path"] != path; });
+            console.log("No existing recnts: ",recents);
+            while (recents.length >= 10)
+            {
+                recents.pop()
+            }
+        }
+
+        console.log("less that 10: ", recents);
+        recents.unshift(recent);
+
+        console.log("Save new recent array: ", recents);
+        ipcMain.send("recentsChanged", recents);
+        return Settings.set("recents", recents);
+    });
+}
 
 exports.createDialog = function(title, label) {
     if (title == undefined) {
@@ -60,6 +91,7 @@ exports.createProject = function(path, isBare) {
                     return false
                 }
                 else {
+                    exports.insertRecent(name, path);
                     return true
                 }
         }
@@ -114,7 +146,9 @@ exports.openProject = function(path) {
 
 exports.openCommand = function(evnt, args) {
     exports.createDialog("Open project directory", "Open").then((path) => {
-        exports.openProject(path)
+        exports.openProject(path);
+        console.log("calling recent routine");
+        exports.insertRecent(Path.basename(path), path);
     })
 }
 

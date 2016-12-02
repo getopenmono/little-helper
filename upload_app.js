@@ -11,11 +11,7 @@ exports.openElfFile = function(evnt, arg)
             filters: [ { name: "Mono Applications", extensions: ["elf"]} ],
             properties: ["openFile"]
         }, (files) => {
-            if (files == null || files.length <= 0)
-                reject()
-            else {
-                fulfill(files)
-            }
+            fulfill(files)
         })
     })
 }

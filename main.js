@@ -5,6 +5,7 @@ const url = require('url')
 
 const upload = require("./upload_app")
 const project = require("./projects")
+const Settings = require("./settings")
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -51,9 +52,18 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    console.log("Window activate event!");
     if (win === null) {
         createWindow()
+
+        console.log("checking settings...");
+        
+        Settings.get("recents").then((recents) => {
+            console.log("sedning recents: ", recents);
+            ipcMain.send("recentsChanged", recents);
+        }, (err) => {
+            console.log(err);
+            Settings.set("recents", []);
+        });
     }
 })
 

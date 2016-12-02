@@ -65,6 +65,9 @@ $(window).ready(() => {
     console.log("setting up command listeners...");
 
     $("#uploadCommand").click(() => {
+        if ($("#uploadCommand").hasClass("disabled"))
+            return;
+
         clearTimeout(connectTimer)
         updateMonoState("upload")
         ipcRenderer.send("uploadCommand", "uploadCommandComplete")
@@ -101,7 +104,7 @@ $(window).ready(() => {
     $("#createForm").submit((evnt) => {
         evnt.preventDefault();
         evnt.stopPropagation();
-        
+
         ipcRenderer.send("createCommand", [$("#createProjectName").val(), $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
     })
 

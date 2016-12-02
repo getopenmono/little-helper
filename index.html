@@ -4,57 +4,69 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mono's Little Helper</title>
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <title>MonoMake</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Navigation-Clean1.css">
+    <link rel="stylesheet" href="assets/css/vert-center.css">
 </head>
 
 <body>
     <div>
-        <nav class="navbar navbar-default navigation-clean">
-            <div class="container">
-                <div class="navbar-header"><a class="navbar-brand navbar-link" href="#">Mono's Little Helper</a>
-                    <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button class="navbar-toggle collapsed hidden" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
                 </div>
                 <div class="collapse navbar-collapse" id="navcol-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li role="presentation"><a href="#" id="docsLink">Developer Docs</a></li>
-                        <li role="presentation"><a href="#" id="communityLink">Community </a></li>
-                        <li role="presentation"><a href="#" id="kioskLink">monokiosk </a></li>
+                    <ul class="nav navbar-nav">
+                        <li role="presentation"><a href="#" id="docsLink"><i class="glyphicon glyphicon-new-window"></i> Developer Docs</a></li>
+                        <li role="presentation"><a href="#" id="communityLink"><i class="glyphicon glyphicon-new-window"></i> Community </a></li>
+                        <li role="presentation"><a href="#" id="kioskLink"><i class="glyphicon glyphicon-new-window"></i> monokiosk </a></li>
                     </ul>
+                    <p class="text-warning navbar-text navbar-right" id="mono-state-par"><span id="mono-state-text">Mono not connected </span><i class="glyphicon glyphicon-remove" id="mono-state-icon"></i></p>
                 </div>
             </div>
         </nav>
     </div>
-    <div>
+    <div class="vertical-center">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-sm-6">
                     <h4> <i class="fa fa-cogs"></i> Actions </h4>
                     <p class="hide">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu velit magna. Vivamus pharetra ullamcorper neque, non convallis dui ultricies non. In rutrum augue ut enim ornare, vitae tempor mi condimentum.</p>
-                    <div class="list-group">
-                        <a class="list-group-item" href="#" id="uploadCommand">
-                            <p><i class="glyphicon glyphicon-download-alt"></i><span> Install an application</span></p><small class="text-muted">Choose an existing Mono application file (ELF) and install it on your device</small></a>
-                        <a class="list-group-item"
-                        href="#" id="createCommand">
-                            <p class="list-group-item-text"><i class="glyphicon glyphicon-plus"></i><span> Create a new project</span></p><small class="text-muted">Create a new Mono Application project,and start coding!</small></a>
-                        <a class="list-group-item" href="#" id="openCommand">
-                            <p class="list-group-item-text"><i class="glyphicon glyphicon-folder-open"></i><span> Open a project</span></p><small class="text-muted">Browse to an existing project directory, and open it in the Atom editor</small></a>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <p><i class="glyphicon glyphicon-download-alt"></i><span> Install an application</span>
+                                <button class="btn btn-primary btn-sm pull-right" type="button" id="uploadCommand">Install </button>
+                            </p><small class="text-muted">Choose an existing Mono application file (ELF) and install it on your device</small></div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <p class="list-group-item-text"><i class="glyphicon glyphicon-plus"></i><span> Create a new project</span>
+                                <button class="btn btn-success btn-sm pull-right" type="button" id="createCommand">Create </button>
+                            </p><small class="text-muted">Create a new Mono Application project,and start coding!</small></div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <p class="list-group-item-text"><i class="glyphicon glyphicon-folder-open"></i><span> Open a project</span>
+                                <button class="btn btn-default btn-sm pull-right" type="button" id="openCommand"> Open </button>
+                            </p><small class="text-muted">Browse to an existing project directory, and open it in the Atom editor</small></div>
                     </div>
                 </div>
                 <div class="col-md-5 col-md-offset-1 col-sm-6">
                     <h4><i class="glyphicon glyphicon-duplicate"></i> Recents </h4>
-                    <div class="list-group"><a class="list-group-item"><h5>name </h5><p><small>path </small></p></a></div>
+                    <div class="list-group" id="recentsList">
+                        <a class="list-group-item">
+                            <h5><i class="glyphicon glyphicon-file"></i> name </h5>
+                            <p><small><pre>path</pre></small></p>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <footer>
-        <div class="container">
-            <p class="text-right" id="mono-state-par" style="margin-top:1em;"> <span id="mono-state-text">Mono not connected </span><i class="glyphicon glyphicon-remove" id="mono-state-icon"></i></p>
-        </div>
-    </footer>
+    <footer></footer>
     <div class="modal fade" role="dialog" tabindex="-1" id="uploadModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -119,7 +131,7 @@
         </div>
     </div>
     <script src="client.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
