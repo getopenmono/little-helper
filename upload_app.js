@@ -71,7 +71,7 @@ exports.uploadFile = function(file) {
     });
 }
 
-exports.downloadMonoFile = function(url)
+exports.downloadMonoFile = function(url, targetFileName = null)
 {
     return new Promise((fulfill, reject) => {
         const https = require("https")
@@ -80,8 +80,15 @@ exports.downloadMonoFile = function(url)
         console.log("Downloading URL: "+parsedUrl.href)
         var req = https.get(parsedUrl.href, (res) => {
             var tmpFile;
+
+            if (res.statusCode == 302) {
+                console.log("Redirecting...")
+                exports.downloadMonoFile(res.headers["location"], targetFileName || Path.basename(parsedUrl.pathname)).then(fulfill, reject)
+                return
+            }
+
             Fs.mkdtemp("tmp", (err, tmpPath) => {
-                tmpFile = Path.join(tmpPath, Path.basename(parsedUrl.pathname))
+                tmpFile = Path.join(tmpPath, targetFileName || Path.basename(parsedUrl.pathname))
                 
                 res.on("data", (data) => {
                     Fs.appendFile(tmpFile, data)
@@ -118,6 +125,26 @@ exports.uploadCommand = function(evnt, args) {
         }, (err) => { console.log("upload promise rejected, cb is: "+args); evnt.sender.send(args, "error: "+err) })
     }, (err) => { evnt.sender.send(args, "error: "+err) });
 
+}
+
+exports.installFromUrl = function(url, webContents = null)
+{
+    if (webContents != null)
+        webContents.send("urlUploadTrigger")
+    
+    exports.downloadMonoFile(url).then((path) => {
+        exports.uploadFile(path).then(() => {
+            RmTmpFile(path)
+            if (webContents != null)
+                webContents.send("uploadCommandComplete")
+        }, (err) => {
+            RmTmpFile(path)
+            if (webContents != null)
+                webContents.send("uploadCommandComplete", "error: "+err)
+        });
+    }, (err) => {
+        console.error(err);
+    })
 }
 
 exports.attachHandlers = function() {

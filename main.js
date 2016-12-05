@@ -1,10 +1,17 @@
 
 const {app, BrowserWindow, ipcRenderer} = require('electron')
-const path = require('path')
+const Path = require('path')
 const Fs = require("fs")
 const url = require('url')
 const Promise = require("promise")
 const Access = Promise.denodeify(Fs.access)
+const RmTmpFile = (path) => {
+    const unlink = Promise.denodeify(Fs.unlink)
+    const rmdir = Promise.denodeify(Fs.rmdir)
+    return new Promise((fulfill, reject) => {
+        unlink(path).then(rmdir(Path.dirname(path))).then(fulfill, reject)
+    })
+}
 
 const upload = require("./upload_app")
 const project = require("./projects")
@@ -23,7 +30,7 @@ function createWindow () {
 
     // and load the index.html of the app.
     win.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: Path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -49,11 +56,11 @@ app.on('ready', () => {
 
     app.setAsDefaultProtocolClient("openmono", null, ["--url"]);
 
-    let url = "openmono://github.com/getopenmono/clock/releases/download/v0.1.0/clock.elf"
-    console.log("OPEN URL: "+url)
-    upload.downloadMonoFile(url).then(upload.openElfFile, (err) => {
-        console.error(err);
-    })
+    setTimeout(() => {
+        let url = "openmono://github.com/getopenmono/clock/releases/download/v0.1.0/clock.elf"
+        upload.installFromUrl(url, win.webContents)
+    }, 2000)
+    
 
 })
 

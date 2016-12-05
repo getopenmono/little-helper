@@ -101,6 +101,11 @@ $(window).ready(() => {
         ipcRenderer.send("detectCommand", "updateMonoState")
     })
 
+    ipcRenderer.on("urlUploadTrigger", (evnt, message) => {
+        clearTimeout(connectTimer)
+        updateMonoState("upload")
+        $("#uploadModal").modal({show: true, keyboard: false})
+    })
 
     $("#createCommand").click(() => {
         $("#createModal").modal("show");
