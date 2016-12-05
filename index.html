@@ -31,6 +31,12 @@
     </div>
     <div class="vertical-center">
         <div class="container">
+            <div id="atomAlert" class="alert alert-info hidden" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>The Atom editor is not installed.</h4>
+                <p>Please install it to enable opening a project directly from here. Restart <em>MonoMake</em> then you have installed <em>Atom</em>, to enable the <em>Open</em> features.</p>
+                <p class="text-right"><button class="btn btn-primary btn-xs atomLink"><i class="glyphicon glyphicon-new-window"></i> Go to Atom's website</button></p>
+            </div>
             <div class="row">
                 <div class="col-md-6 col-sm-6">
                     <h4> <i class="fa fa-cogs"></i> Actions </h4>
@@ -50,7 +56,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <p class="list-group-item-text"><i class="glyphicon glyphicon-folder-open"></i><span> Open a project</span>
-                                <button class="btn btn-default btn-sm pull-right" type="button" id="openCommand"> Open </button>
+                                <button class="btn btn-default btn-sm pull-right projectCommand" type="button" id="openCommand"> Open </button>
                             </p><small class="text-muted">Browse to an existing project directory, and open it in the Atom editor</small></div>
                     </div>
                 </div>

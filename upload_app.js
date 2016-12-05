@@ -2,6 +2,8 @@
 const {app, BrowserWindow, dialog, ipcMain, ipcRenderer} = require('electron')
 const child = require("child_process")
 const Promise = require("promise")
+const Fs = require("fs")
+const Path = require("path")
 
 exports.openElfFile = function(evnt, arg)
 {
@@ -67,6 +69,37 @@ exports.uploadFile = function(file) {
         })
         pross.stdout.pipe(process.stdout);
     });
+}
+
+exports.downloadMonoFile = function(url)
+{
+    return new Promise((fulfill, reject) => {
+        const https = require("https")
+        const Url = require("url")
+        var parsedUrl = Url.parse(url.replace("openmono://", "https://"))
+        console.log("Downloading URL: "+parsedUrl.href)
+        var req = https.get(parsedUrl.href, (res) => {
+            var tmpFile;
+            Fs.mkdtemp("tmp", (err, tmpPath) => {
+                tmpFile = Path.join(tmpPath, Path.basename(parsedUrl.pathname))
+                
+                res.on("data", (data) => {
+                    Fs.appendFile(tmpFile, data)
+                })
+            })
+
+            res.on("end", () => {
+                if (res.statusCode != 200)
+                    reject("Invalid status code!");
+                else
+                    fulfill(tmpFile);
+            })
+
+            res.on("error", (err) => {
+                reject(err)
+            })
+        })
+    })
 }
 
 exports.uploadCommand = function(evnt, args) {

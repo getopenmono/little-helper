@@ -44,6 +44,11 @@
     "linux": {
       "category": "Development",
       "target": "deb"
+    },
+    "protocols": {
+      "name": "MonoKiosk ELF file install URL",
+      "role": "Viewer",
+      "schemes": ["openmono"]
     }
   }
 }

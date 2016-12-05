@@ -1,9 +1,11 @@
-
+const {ipcRenderer} = require("electron")
 
 exports.newRecentDiv = function(name, path)
 {
     var aTag = $('<a>');
-    aTag.addClass("list-group-item");
+    aTag.addClass("list-group-item recentLink");
+    aTag.attr("data-path",path);
+    aTag.attr("href","javascript:void(0);")
     var header = $("<h5>");
     var glyph = $("<i>");
     glyph.addClass("glyphicon glyphicon-file");
@@ -29,4 +31,14 @@ exports.recentsChangedHandler = function(evnt, newRecents) {
     }
 
     $("#recentsList").empty().append(recntsEls);
+    recents.handleRecentLinks();
+}
+
+exports.handleRecentLinks = function() {
+    console.log($(".recentLink"));
+    $(".recentLink").click((evnt) => {
+        var path = $(evnt.currentTarget).attr("data-path");
+        console.log("path: "+path);
+        ipcRenderer.send("openPath", path);
+    });
 }

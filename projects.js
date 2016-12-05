@@ -2,7 +2,9 @@
 const {app, BrowserWindow, dialog, ipcMain, ipcRenderer, shell} = require('electron')
 const child = require("child_process")
 const Path = require("path")
+const Fs = require("fs");
 const Promise = require("promise")
+const Access = Promise.denodeify(Fs.access)
 const Settings = require("./settings")
 
 exports.insertRecent = function(title, path, webSender) {
@@ -23,10 +25,11 @@ exports.insertRecent = function(title, path, webSender) {
 
         console.log("less that 10: ", recents);
         recents.unshift(recent);
-
+        app.addRecentDocument(recent.path);
         console.log("Save new recent array: ", recents);
-        webSender.send("recentsChanged", recents);
-        return Settings.set("recents", recents);
+        return Settings.set("recents", recents).then(() => {
+             webSender.send("recentsChanged", recents);
+        });
     });
 }
 
@@ -70,25 +73,24 @@ exports.createProject = function(path, isBare) {
 
         function parseOutput(output) {
             if (output.match(/Project target directory already exists/)) {
-                    console.log("already exists!")
-                    dialog.showMessageBox({
-                        type: "error",
-                        buttons: ["OK"],
-                        title: name+" already exists!",
-                        message: "There already exists a directory with the name "+name+" on the choosen directory"
-                    })
-                    reject("directory exists")
-                    return false
-                }
-                else if (output.match(/Err: /)) {
-                    console.error("make error!")
-                    reject(output)
-                    return false
-                }
-                else {
-                    exports.insertRecent(name, path);
-                    return true
-                }
+                console.log("already exists!")
+                dialog.showMessageBox({
+                    type: "error",
+                    buttons: ["OK"],
+                    title: name+" already exists!",
+                    message: "There already exists a directory with the name "+name+" on the choosen directory"
+                })
+                reject("directory exists")
+                return false
+            }
+            else if (output.match(/Err: /)) {
+                console.error("make error!")
+                reject(output)
+                return false
+            }
+            else {
+                return true
+            }
         }
 
         var cp = child.exec("monomake project "+name+(isBare?" --bare":""), options, (err, stdout, stderr) => {
@@ -118,6 +120,7 @@ exports.createProjectCommand = function(evnt, args) {
         exports.createProject(Path.join(path, args[0]), (args[1]?false:true)).then(() => {
             console.log("done")
             evnt.sender.send(args[3], "ok")
+            exports.insertRecent(args[0], Path.join(path, args[0]), evnt.sender);
             if (args[2] == true) {
                 exports.openProject(Path.join(path, args[0]))
             }
@@ -129,14 +132,20 @@ exports.createProjectCommand = function(evnt, args) {
 }
 
 exports.openProject = function(path) {
-    console.log("open in external editor: "+path)
-    var proc = child.exec("atom \""+path+"\"", (err, stdout, stderr) => {
-        if (err) {
-            dialog.showErrorBox("Could not open Atom editor", err)
-        }
-    });
+    exports.isAtomPresent().then(() => {
+        console.log("open in external editor: "+path)
+        var proc = child.exec("atom \""+path+"\"", (err, stdout, stderr) => {
+            if (err) {
+                dialog.showErrorBox("Could not open Atom editor", err)
+            }
+        });
 
-    proc.stdout.pipe(process.stdout)
+        proc.stdout.pipe(process.stdout)
+    }, (err) => {
+        console.error("Atom is not installed: "+err)
+        dialog.showErrorBox("Atom editor not installed", "The Atom editor is not installed on the command line PATH variable.")
+    })
+    
 }
 
 exports.openCommand = function(evnt, args) {
@@ -157,12 +166,65 @@ exports.getRecents = function(evnt)
     }, (err) => {
         console.log(err);
         Settings.set("recents", []);
+        app.clearRecentDocuments()
         evnt.sender.send("recentsChanged", []);
     });
+}
+
+exports.openPath = function(evnt, args)
+{
+    var path = args
+    Access(path, Fs.constants.R_OK).then(() => {
+        exports.openProject(path);
+        exports.insertRecent(Path.basename(path), path, evnt.sender);
+    }, (err) => {
+        console.log(err);
+        dialog.showErrorBox("Project not found", "The path ("+path+") does not exists. Maybe it has been moved since you last used it, or it has been deleted.")
+    })
+} 
+
+exports.isAtomPresent = function()
+{
+    if (process.platform != "win32")
+    {
+        return new Promise((fulfill, reject) => {
+            var proc = child.exec("hash atom; if [ $? ]; then echo \"OK\"; else echo \"NO\"; fi", (err, stdout, stderr) => {
+                if (err) {
+                    reject(err);
+                }
+                else
+                {
+                    var response = stdout.toString();
+                    if (response == "OK")
+                        fulfill();
+                    else {
+                        reject("Atom not installed");
+                    }
+                }
+            });
+
+            proc.stdout.pipe(process.stdout)
+        })
+    }
+    else {
+        console.error("Winows Atom check not implemented");
+        throw "Not implemented"; 
+    }
+}
+
+exports.atomPresentCommand = function(evnt, args)
+{
+    exports.isAtomPresent().then(() => {
+        evnt.sender.send("atomPresent", {present: false, msg: null});
+    }, (err) => {
+        evnt.sender.send("atomPresent", {present: false, msg: err});
+    })
 }
 
 exports.attachCommands = function() {
     ipcMain.on("createCommand", exports.createProjectCommand)
     ipcMain.on("openCommand", exports.openCommand)
+    ipcMain.on("openPath", exports.openPath)
     ipcMain.on("getRecents", exports.getRecents)
+    ipcMain.on("atomPresent", exports.atomPresentCommand)
 }

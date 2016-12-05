@@ -15,6 +15,14 @@ const toggleMonoEnableMenus = function (enabled) {
     }
 }
 
+const toggleProjectMenus = function(enabled)
+{
+    if (enabled)
+        $(".projectCommand").removeClass("disabled");
+    else
+        $(".projectCommand").addClass("disabled");
+}
+
 const displayError = function (title, message) {
     $("#errorModalHeading").text(title);
     $("#errroModalBody").text(message);
@@ -63,6 +71,15 @@ $(window).ready(() => {
         connectTimer = setTimeout(() => { ipcRenderer.send("detectCommand", "updateMonoState") }, 1000)
     })
 
+    ipcRenderer.on("atomPresent", (evnt, message) => {
+        if (!message.present)
+        {
+            toggleProjectMenus(false);
+            $("#atomAlert").removeClass("hidden")
+        }
+    })
+    ipcRenderer.send("atomPresent")
+
     console.log("setting up command listeners...");
 
     $("#uploadCommand").click(() => {
@@ -100,7 +117,8 @@ $(window).ready(() => {
     })
 
     $("#openCommand").click(() => {
-        ipcRenderer.send("openCommand");
+        if (!$("#openCommand").hasClass("disabled"))
+            ipcRenderer.send("openCommand");
     });
     $("#createForm").submit((evnt) => {
         evnt.preventDefault();
@@ -115,4 +133,6 @@ $(window).ready(() => {
     $("#docsLink").click(() => {shell.openExternal("http://developer.openmono.com") })
     $("#communityLink").click(() => {shell.openExternal("https://community.openmono.com") })
     $("#kioskLink").click(() => {shell.openExternal("https://monokiosk.com") })
+
+    $(".atomLink").click(() => { shell.openExternal("https://atom.io") })
 });
