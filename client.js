@@ -1,10 +1,22 @@
 
 window.$ = window.jQuery = require("./bower_components/jquery/dist/jquery.js");
 const recents = require("./recents");
-const {shell} = require("electron");
+const {shell, crashReporter} = require("electron");
+
+crashReporter.start({
+  productName: 'MonoMake-UI',
+  companyName: 'Monolit ApS',
+  submitURL: "http://localhost:8080/",
+  autoSubmit: true
+})
 
 const ipcRenderer = require("electron").ipcRenderer;
 var connectTimer = null;
+
+ipcRenderer.on("consoleOutput", (data) => {
+    data
+    //console.log(data)
+})
 
 const toggleMonoEnableMenus = function (enabled) {
     if (enabled) {
@@ -68,7 +80,7 @@ $(window).ready(() => {
     ipcRenderer.send("detectCommand", "updateMonoState")
     ipcRenderer.on("updateMonoState", (evnt, message) => {
         updateMonoState(message);
-        connectTimer = setTimeout(() => { ipcRenderer.send("detectCommand", "updateMonoState") }, 1000)
+        connectTimer = setTimeout(() => { ipcRenderer.send("detectCommand", "updateMonoState") }, 200)
     })
 
     ipcRenderer.on("atomPresent", (evnt, message) => {
@@ -89,6 +101,7 @@ $(window).ready(() => {
         clearTimeout(connectTimer)
         updateMonoState("upload")
         ipcRenderer.send("uploadCommand", "uploadCommandComplete")
+        $("#uploadProgressBar").addClass("active").css("width","100%")
         $("#uploadModal").modal({show: true, keyboard: false})
     });
     ipcRenderer.on("uploadCommandComplete", (evnt, message) => {
@@ -104,6 +117,7 @@ $(window).ready(() => {
     ipcRenderer.on("urlUploadTrigger", (evnt, message) => {
         clearTimeout(connectTimer)
         updateMonoState("upload")
+        $("#uploadProgressBar").addClass("active").css("width","100%")
         $("#uploadModal").modal({show: true, keyboard: false})
     })
 
@@ -119,6 +133,11 @@ $(window).ready(() => {
             $("#createModal").modal("hide")
             $("#createProjectName").val("")
         }
+    })
+    ipcRenderer.on("uploadProgress", (evnt, message) => {
+        $("#uploadProgressBar").css("width",message+"%").removeClass("active").attr("aria-valuenow",message)
+        $("#uploadProgressBar > span").text(message+"%")
+        console.log(message+"%")
     })
 
     $("#openCommand").click(() => {

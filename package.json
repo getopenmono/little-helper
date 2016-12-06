@@ -12,8 +12,8 @@
     "postinstall": "bower install"
   },
   "node-debugger": {
-      "nodePath": "electron",
-      "nodeArgs": "main.js"
+    "nodePath": "electron",
+    "nodeArgs": "main.js"
   },
   "author": {
     "name": "Monolit ApS",
@@ -48,7 +48,9 @@
     "protocols": {
       "name": "MonoKiosk ELF file install URL",
       "role": "Viewer",
-      "schemes": ["openmono"]
+      "schemes": [
+        "openmono"
+      ]
     }
   }
 }

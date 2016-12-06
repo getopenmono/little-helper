@@ -1,17 +1,19 @@
 
-const {app, BrowserWindow, ipcRenderer} = require('electron')
+const {app, BrowserWindow, ipcRenderer, dialog, crashReporter} = require('electron')
 const Path = require('path')
 const Fs = require("fs")
 const url = require('url')
 const Promise = require("promise")
 const Access = Promise.denodeify(Fs.access)
-const RmTmpFile = (path) => {
-    const unlink = Promise.denodeify(Fs.unlink)
-    const rmdir = Promise.denodeify(Fs.rmdir)
-    return new Promise((fulfill, reject) => {
-        unlink(path).then(rmdir(Path.dirname(path))).then(fulfill, reject)
-    })
-}
+
+crashReporter.start({
+  productName: 'MonoMake-UI',
+  companyName: 'Monolit ApS',
+  submitURL: "http://localhost:8080/",
+  autoSubmit: true
+})
+
+console.log("Temp Dir: ",app.getPath("temp"))
 
 const upload = require("./upload_app")
 const project = require("./projects")
@@ -20,6 +22,10 @@ const Settings = require("./settings")
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+var winPrmFulfill = null;
+var winPrm = new Promise((fulfill, reject) => {
+    winPrmFulfill = fulfill;
+})
 
 upload.attachHandlers();
 project.attachCommands();
@@ -45,6 +51,9 @@ function createWindow () {
         // when you should delete the corresponding element.
         win = null
     })
+
+    if (winPrmFulfill)
+        winPrmFulfill();
 }
 
 // This method will be called when Electron has finished
@@ -55,20 +64,20 @@ app.on('ready', () => {
     createWindow();
 
     app.setAsDefaultProtocolClient("openmono", null, ["--url"]);
-
-    setTimeout(() => {
-        let url = "openmono://github.com/getopenmono/clock/releases/download/v0.1.0/clock.elf"
-        upload.installFromUrl(url, win.webContents)
-    }, 2000)
     
-
+    // setTimeout(() => {
+    //     let url = "openmono://github.com/getopenmono/humidity/releases/download/v1.0.0/humidity.elf"
+    //      upload.installFromUrl(url, win.webContents)
+    // }, 2000)
 })
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    app.quit()
+    if (process.platform != 'darwin') {
+        app.quit();
+  }
 })
 
 app.on('activate', () => {
@@ -88,16 +97,38 @@ app.on("open-file", (evnt, path) => {
 })
 
 app.on("open-url", (evnt, url) => {
-    console.log("OPEN URL: "+url)
-    upload.downloadMonoFile(url).then(upload.openElfFile, (err) => {
-        console.error(err);
-    })
+    console.log("open url ", url)
+    if (win == null)
+    {
+        console.log("window not ready, call when ready!")
+        winPrm.then(() => {
+            upload.installFromUrl(url, win.webContents)
+        })
+    }
+    else
+    {
+         upload.installFromUrl(url, win.webContents)
+    }
+    
+    evnt.preventDefault();
 })
 
 process.on('uncaughtException', function (error) {
     // Handle the error
     console.error(error);
-    throw error;
+    process.crash();
+})
+
+winPrm.then(() => {
+    //var chunk = consoleStream.read()
+    //win.webContents.send("consoleOutput", chunk)
+
+    // consoleStream.on("data", (data) => {
+    //     if (win)
+    //         win.webContents.send("consoleOutput", data)
+    // })
+
+    //consoleStream.eventNames()
 })
 
 // In this file you can include the rest of your app's specific main process

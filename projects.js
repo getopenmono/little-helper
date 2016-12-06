@@ -7,6 +7,9 @@ const Promise = require("promise")
 const Access = Promise.denodeify(Fs.access)
 const Settings = require("./settings")
 
+const MacMonomakePath = "/usr/local/bin";
+const shellPrefix = process.platform == "darwin" ? "export PATH=$PATH:"+MacMonomakePath+" && " : "";
+
 exports.insertRecent = function(title, path, webSender) {
     var recent = {title: title, path: path};
     console.log("creating recent: ",recent);
@@ -93,7 +96,7 @@ exports.createProject = function(path, isBare) {
             }
         }
 
-        var cp = child.exec("monomake project "+name+(isBare?" --bare":""), options, (err, stdout, stderr) => {
+        var cp = child.exec(shellPrefix+"monomake project "+name+(isBare?" --bare":""), options, (err, stdout, stderr) => {
             if (err) {
                 console.error("monomake process returned error: "+err)
                 if (!parseOutput(stdout.toString())) {
@@ -215,7 +218,7 @@ exports.isAtomPresent = function()
 exports.atomPresentCommand = function(evnt, args)
 {
     exports.isAtomPresent().then(() => {
-        evnt.sender.send("atomPresent", {present: false, msg: null});
+        evnt.sender.send("atomPresent", {present: true, msg: null});
     }, (err) => {
         evnt.sender.send("atomPresent", {present: false, msg: err});
     })
