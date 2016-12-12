@@ -198,7 +198,7 @@ exports.isAtomPresent = function()
                 else
                 {
                     var response = stdout.toString();
-                    if (response == "OK")
+                    if (response.match(/OK/))
                         fulfill();
                     else {
                         reject("Atom not installed");
