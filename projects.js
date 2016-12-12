@@ -210,8 +210,18 @@ exports.isAtomPresent = function()
         })
     }
     else {
-        console.error("Winows Atom check not implemented");
-        throw "Not implemented"; 
+        return new Promise((fulfill, reject) => {
+            var proc = child.exec("where atom");
+            proc.on("exit", () => {
+                if (proc.exitCode != 0) {
+                    reject("Atom not installed");
+                }
+                else
+                {
+                    fulfill();
+                }
+            });
+        });
     }
 }
 
