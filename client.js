@@ -125,7 +125,11 @@ $(window).ready(() => {
         $("#createModal").modal("show");
     });
     $("#createConfirm").click(() => {
-        ipcRenderer.send("createCommand", [$("#createProjectName").val(), $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
+        console.error("this method is deprecated, use submit event!")
+        var projName = $("#createProjectName").val()
+        projName = projName.trim().replace(/\s/g,"-");
+        $("#createProjectName").val(projName);
+        ipcRenderer.send("createCommand", [projName, $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
     })
     ipcRenderer.on("createCommandComplete", (evnt, message) => {
         console.log("main returned: "+message)
@@ -148,7 +152,10 @@ $(window).ready(() => {
         evnt.preventDefault();
         evnt.stopPropagation();
 
-        ipcRenderer.send("createCommand", [$("#createProjectName").val(), $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
+        var projName = $("#createProjectName").val()
+        projName = projName.trim().replace(/\s/g,"-");
+        $("#createProjectName").val(projName);
+        ipcRenderer.send("createCommand", [projName, $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
     })
 
     ipcRenderer.on("recentsChanged", recents.recentsChangedHandler);
