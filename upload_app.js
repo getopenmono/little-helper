@@ -69,17 +69,24 @@ exports.detectMono = function() {
 exports.uploadFile = function(file, webContents) {
     return new Promise((fulfill, reject) => {
         console.log("programming file!");
-        var pross = child.spawn(shellPrefix+"monomake monoprog -H -p \""+file+"\"", (error, stdout, stderr) => {
-            if (error) {
-                console.error("could not run monoprog: "+error);
-                reject(error)
+        var stdout = "", stderr = "";
+        var pross = child.spawn(shellPrefix+"monomake", ["monoprog", "-H", "-p", file], {
+            shell: true,
+            cwd: Path.dirname(file)
+        }); 
+
+        pross.on("exit", (code, signal) => {
+            if (code != 0) {
+                console.error("could not run (${code}) monoprog: "+stderr);
+                reject(stderr)
             }
             else {
                 fulfill(stdout, stderr)
             }
-        })
-        //pross.stdout.pipe(process.stdout);
+        });
+
         pross.stdout.on("data", (data) => {
+            stdout += data;
             const str = data.toString()
             const matches = str.match(/^(\d+)%/)
             if (matches) {
@@ -88,6 +95,8 @@ exports.uploadFile = function(file, webContents) {
                     webContents.send("uploadProgress", percent);
             }
         })
+
+        pross.stderr.on("data", (data) => { stderr += data; })
     });
 }
 
