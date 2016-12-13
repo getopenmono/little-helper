@@ -84,10 +84,22 @@ $(window).ready(() => {
     })
 
     ipcRenderer.on("atomPresent", (evnt, message) => {
+        var fileExplorer = "";
+        switch (process.platform) {
+            case "win32":
+                fileExplorer = "Explorer";
+                break;
+            case "darwin":
+                fileExplorer = "Finder";
+                break;
+            case "linux":
+                fileExplorer = "file explorer";
+        }
         if (!message.present)
         {
             toggleProjectMenus(false);
             $("#atomAlert").removeClass("hidden")
+            $("#createOpenAtomTxt").text("Open the new project in "+fileExplorer);
         }
     })
     ipcRenderer.send("atomPresent")
@@ -106,6 +118,7 @@ $(window).ready(() => {
         $("#uploadProgressBar").addClass("active").css("width","0%")
         $("#uploadModal").modal({show: true, keyboard: false})
     });
+
     ipcRenderer.on("uploadCommandComplete", (evnt, message) => {
         console.log("upload completed: "+message);
         $("#uploadModal").modal("hide")
@@ -120,6 +133,7 @@ $(window).ready(() => {
         clearTimeout(connectTimer)
         updateMonoState("upload")
         $("#uploadSpinner").show()
+        $("#uploadProgressBar").addClass("active").css("width","0%")
         $("#uploadModal").modal({show: true, keyboard: false})
     })
 

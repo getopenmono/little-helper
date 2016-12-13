@@ -141,12 +141,19 @@ exports.openProject = function(path) {
             if (err) {
                 dialog.showErrorBox("Could not open Atom editor", err)
             }
+            else
+                app.hide();
         });
 
         proc.stdout.pipe(process.stdout)
     }, (err) => {
         console.error("Atom is not installed: "+err)
-        dialog.showErrorBox("Atom editor not installed", "The Atom editor is not installed on the command line PATH variable.")
+        if (!shell.openItem(path))
+        {
+            dialog.showErrorBox("Atom editor not installed", "The Atom editor is not installed on the command line PATH variable.")
+        }
+        else
+            app.hide();
     })
     
 }

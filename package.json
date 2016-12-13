@@ -36,7 +36,8 @@
     "appId": "dk.monolit.openmono.monomake-ui",
     "mac": {
       "category": "public.app-category.utilities",
-      "target": "zip"
+      "target": "zip",
+      "identity": "Developer ID Installer: Monolit ApS (MUXP6TEH5D)"
     },
     "win": {
       "target": "zip"
@@ -51,6 +52,11 @@
       "schemes": [
         "openmono"
       ]
-    }
+    },
+    "fileAssociations": [{ 
+      "ext": "elf",
+      "name": "Mono Application",
+      "role": "Viewer"
+    }]
   }
 }
