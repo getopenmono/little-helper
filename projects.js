@@ -198,7 +198,7 @@ exports.isAtomPresent = function()
     if (process.platform != "win32")
     {
         return new Promise((fulfill, reject) => {
-            var proc = child.exec("hash atom; if [ $? ]; then echo \"OK\"; else echo \"NO\"; fi", (err, stdout, stderr) => {
+            var proc = child.exec("if hash atom; then echo \"OK\"; else echo \"NO\"; fi", (err, stdout, stderr) => {
                 if (err) {
                     reject(err);
                 }

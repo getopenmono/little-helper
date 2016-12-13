@@ -70,7 +70,7 @@ exports.uploadFile = function(file, webContents) {
     return new Promise((fulfill, reject) => {
         console.log("programming file!");
         var stdout = "", stderr = "";
-        var pross = child.spawn(shellPrefix+"monomake", ["monoprog", "-H", "-p", file], {
+        var pross = child.spawn(shellPrefix+"monomake", ["monoprog", "-H", "-p", '"'+file+'"'], {
             shell: true,
             cwd: Path.dirname(file)
         }); 
@@ -163,6 +163,24 @@ exports.uploadCommand = function(evnt, args) {
         }, (err) => { console.log("upload promise rejected, cb is: "+args); evnt.sender.send(args, "error: "+err) })
     }, (err) => { evnt.sender.send(args, "error: "+err) });
 
+}
+
+exports.uploadElfFile = function(path, webContents)
+{
+    if (webContents != null)
+        webContents.send("urlUploadTrigger");
+    
+    exports.uploadFile(path, webContents).then((stdout, stderr) => {
+        console.log("Upload completed with:\n"+stdout);
+
+        if (webContents != null)
+            webContents.send("uploadCommandComplete", "complete")
+    }, (err) => { 
+        console.error("upload promise rejected: ",err);
+
+        if (webContents != null)
+            win.webContents.send("uploadCommandComplete", "error: "+err); 
+    })
 }
 
 exports.installFromUrl = function(url, webContents = null)

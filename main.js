@@ -1,5 +1,5 @@
 
-const {app, BrowserWindow, ipcRenderer, dialog, crashReporter} = require('electron')
+const {app, BrowserWindow, ipcMain, ipcRenderer, dialog, crashReporter} = require('electron')
 const Path = require('path')
 const Fs = require("fs")
 const url = require('url')
@@ -52,8 +52,11 @@ function createWindow () {
         win = null
     })
 
-    if (winPrmFulfill)
-        winPrmFulfill();
+    ipcMain.once("domReady", () => {
+        console.log("DOM is ready!");
+        if (winPrmFulfill)
+            winPrmFulfill();
+    })
 }
 
 // This method will be called when Electron has finished
@@ -85,8 +88,33 @@ app.on('activate', () => {
 })
 
 app.on("open-file", (evnt, path) => {
-    console.log("Open file: "+path);
-    project.openPath({sender: win.webContent}, path);
+
+    if (win == null)
+    {
+        console.log("window not ready, call when ready!")
+        winPrm.then(() => {
+            console.log("Open file: "+path);
+            if (path.match(/\.elf$/))
+            {
+                upload.uploadElfFile(path, win.webContents);
+            }
+            else {
+                project.openPath({sender: win.webContents}, path);
+            }
+        });
+    }
+    else
+    {
+        console.log("Open file: "+path);
+        if (path.match(/\.elf$/))
+        {
+            upload.uploadElfFile(path, win.webContents);
+        }
+        else
+        {
+            project.openPath({sender: win.webContents}, path);
+        }
+    }
 
     evnt.preventDefault();
 })

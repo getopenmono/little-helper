@@ -2,21 +2,17 @@
 window.$ = window.jQuery = require("./bower_components/jquery/dist/jquery.js");
 const recents = require("./recents");
 const {shell, crashReporter} = require("electron");
+const Settings = require("./settings")
 
-crashReporter.start({
-  productName: 'MonoMake-UI',
-  companyName: 'Monolit ApS',
-  submitURL: "http://localhost:8080/",
-  autoSubmit: true
-})
+// crashReporter.start({
+//   productName: 'MonoMake-UI',
+//   companyName: 'Monolit ApS',
+//   submitURL: "http://localhost:8080/",
+//   autoSubmit: true
+// })
 
 const ipcRenderer = require("electron").ipcRenderer;
 var connectTimer = null;
-
-ipcRenderer.on("consoleOutput", (data) => {
-    data
-    //console.log(data)
-})
 
 const toggleMonoEnableMenus = function (enabled) {
     if (enabled) {
@@ -171,9 +167,21 @@ $(window).ready(() => {
     ipcRenderer.on("recentsChanged", recents.recentsChangedHandler);
     ipcRenderer.send("getRecents");
 
+    $("#createOpenAtom").change(() => {
+        Settings.set("openInAtom", $("#createOpenAtom").prop("checked"))
+    })
+    $("#createNotBare").change(() =>{
+        Settings.set("useHelloWorldTemplate", $("#createNotBare").prop("checked"))
+    })
+
     $("#docsLink").click(() => {shell.openExternal("http://developer.openmono.com") })
     $("#communityLink").click(() => {shell.openExternal("https://community.openmono.com") })
     $("#kioskLink").click(() => {shell.openExternal("https://monokiosk.com") })
 
     $(".atomLink").click(() => { shell.openExternal("https://atom.io") })
+
+    Settings.get("openInAtom").then((atom) => { $("#createOpenAtom").prop("checked",atom); }, () => {console.error("Could not read atom setting")} )
+    Settings.get("useHelloWorldTemplate").then((bare) => { $("#createNotBare").prop("checked",bare); }, () => {console.error("Could not read template setting")} )
+
+    ipcRenderer.send("domReady");
 });
