@@ -69,7 +69,7 @@ exports.detectMono = function() {
 exports.uploadFile = function(file, webContents) {
     return new Promise((fulfill, reject) => {
         console.log("programming file!");
-        var pross = child.exec(shellPrefix+"monomake monoprog -H -p \""+file+"\"", (error, stdout, stderr) => {
+        var pross = child.spawn(shellPrefix+"monomake monoprog -H -p \""+file+"\"", (error, stdout, stderr) => {
             if (error) {
                 console.error("could not run monoprog: "+error);
                 reject(error)
