@@ -101,7 +101,9 @@ $(window).ready(() => {
         clearTimeout(connectTimer)
         updateMonoState("upload")
         ipcRenderer.send("uploadCommand", "uploadCommandComplete")
-        $("#uploadProgressBar").addClass("active").css("width","100%")
+        $("#uploadSpinner").show();
+        $("#uploadProgressBar").hide();
+        $("#uploadProgressBar").addClass("active").css("width","0%")
         $("#uploadModal").modal({show: true, keyboard: false})
     });
     ipcRenderer.on("uploadCommandComplete", (evnt, message) => {
@@ -117,20 +119,14 @@ $(window).ready(() => {
     ipcRenderer.on("urlUploadTrigger", (evnt, message) => {
         clearTimeout(connectTimer)
         updateMonoState("upload")
-        $("#uploadProgressBar").addClass("active").css("width","100%")
+        $("#uploadSpinner").show()
         $("#uploadModal").modal({show: true, keyboard: false})
     })
 
     $("#createCommand").click(() => {
         $("#createModal").modal("show");
     });
-    $("#createConfirm").click(() => {
-        console.error("this method is deprecated, use submit event!")
-        var projName = $("#createProjectName").val()
-        projName = projName.trim().replace(/\s/g,"-");
-        $("#createProjectName").val(projName);
-        ipcRenderer.send("createCommand", [projName, $("#createNotBare").prop("checked"), $("#createOpenAtom").prop("checked"), "createCommandComplete"]);
-    })
+
     ipcRenderer.on("createCommandComplete", (evnt, message) => {
         console.log("main returned: "+message)
         if (message.match(/^ok$/)) {
@@ -139,9 +135,9 @@ $(window).ready(() => {
         }
     })
     ipcRenderer.on("uploadProgress", (evnt, message) => {
-        $("#uploadProgressBar").css("width",message+"%").removeClass("active").attr("aria-valuenow",message)
+        $("#uploadProgressBar").show().css("width",message+"%").attr("aria-valuenow",message)
         $("#uploadProgressBar > span").text(message+"%")
-        console.log(message+"%")
+        $("#uploadSpinner").hide();
     })
 
     $("#openCommand").click(() => {
