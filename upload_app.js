@@ -88,6 +88,7 @@ exports.uploadFile = function(file, webContents) {
         pross.stdout.on("data", (data) => {
             stdout += data;
             const str = data.toString()
+            console.log(data.toString());
             const matches = str.match(/^(\d+)%/)
             if (matches) {
                 const percent = matches[1]
@@ -96,7 +97,7 @@ exports.uploadFile = function(file, webContents) {
             }
         })
 
-        pross.stderr.on("data", (data) => { stderr += data; })
+        pross.stderr.on("data", (data) => { stderr += data.toString(); console.error(data.toString()); })
     });
 }
 
