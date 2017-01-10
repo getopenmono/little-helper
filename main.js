@@ -136,6 +136,46 @@ app.on("open-url", (evnt, url) => {
     evnt.preventDefault();
 })
 
+if (process.platform == "win32" && process.argv.length >= 2)
+{
+    console.log(process.argv);
+    if (win == null)
+    {
+        console.log("open file, windows not yet ready waiting...");
+        winPrm.then(() => {
+            if (process.argv[1].match(/^openmono:\/\//))
+            {
+                upload.installFromUrl(process.argv[1], win.webContents)
+            }
+            else if (process.argv[1].match(/\.elf$/))
+            {
+                upload.uploadElfFile(process.argv[1], win.webContents);
+            }
+            else
+            {
+                project.openPath({sender: win.webContents}, process.argv[1]);
+            }
+        });
+    }
+    else
+    {
+        console.log("Open file: "+process.argv[1]);
+        if (process.argv[1].match(/^openmono:\/\//))
+        {
+            console
+            upload.installFromUrl(process.argv[1], win.webContents)
+        }
+        else if (process.argv[1].match(/\.elf$/))
+        {
+            upload.uploadElfFile(process.argv[1], win.webContents);
+        }
+        else
+        {
+            project.openPath({sender: win.webContents}, process.argv[1]);
+        }
+    }
+}
+
 process.on('uncaughtException', function (error) {
     // Handle the error
     console.error(error);
