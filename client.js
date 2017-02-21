@@ -176,7 +176,7 @@ $(window).ready(() => {
 
     $("#docsLink").click(() => {shell.openExternal("http://developer.openmono.com") })
     $("#communityLink").click(() => {shell.openExternal("https://community.openmono.com") })
-    $("#kioskLink").click(() => {shell.openExternal("https://monokiosk.com") })
+    $("#kioskLink").click(() => {shell.openExternal("https://kiosk.openmono.com") })
 
     $(".atomLink").click(() => { shell.openExternal("https://atom.io") })
 
