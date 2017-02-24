@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "build --dir",
     "dist": "build",
-    "postinstall": "bower install --allow-root"
+    "postinstall": "./node_modules/.bin/bower install --allow-root"
   },
   "node-debugger": {
     "nodePath": "electron",
